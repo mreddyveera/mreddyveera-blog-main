@@ -2,9 +2,13 @@ import React,{useState} from "react";
 import { Link,useNavigate } from "react-router-dom";   // ✅ named import
 import axios from "axios";
 import { Label, TextInput, Button } from "flowbite-react";
+import {signInStart,signInSuccess,signInFailure} from "../redux/user/userSlice.js";
+import {useDispatch,useSelector} from "react-redux";
 
 function Signin() {
   const navigate = useNavigate();
+  const dispatch=useDispatch();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -13,7 +17,7 @@ function Signin() {
     email: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const {loading,error:errorMessage}=useSelector(state=>state.user);
   const [valid,setValid]=useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,38 +44,25 @@ function Signin() {
   };
   const handleSubmit =  (e) => {
     e.preventDefault();
-    // if (!formData.password || !formData.email) {
-    //   return setErrorMessage("Please fill out all the fields");
-    // }
+    if (!formData.password || !formData.email) {
+      return dispatch(signInFailure("Please fill out all the fields"));
+    }
 
     try {
-      // const res=await fetch('http://localhost:3000/api/auth/signup',{
-      //   method:'POST',
-      //   headers:{'Content-Type':'application/json'},
-      //   body:JSON.stringify(formData),
-      // });
-      // const response = await axios.post(
-      //   "http://localhost:3000/api/auth/signup",
-      //   formData
-      // );
-      // const data = response.data; // Note: response.data, not response.json()
-      // if (data.message === "User already exists please Sign in") {
-      //   setErrorMessage(data.message);
-      // } else {
-      //   navigate("/");
-      // }
-
+      dispatch(signInStart());
       axios.post("http://localhost:3000/api/auth/signin",formData)
-      .then((response)=>{
+      .then((response)=>
+        {
+        dispatch(signInSuccess(response));
         setTimeout(()=>{navigate("/")},2000);
-        setErrorMessage("");
+        
       })
       .catch((error)=>{
         console.log(error.message);
-        setErrorMessage(error.message);
+        dispatch(signInFailure(error.message));
       })
     } catch (error) {
-      setErrorMessage(error.message);
+      dispatch(signInFailure(error.message));
     }
   };
 
