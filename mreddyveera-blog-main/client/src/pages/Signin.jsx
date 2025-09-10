@@ -4,6 +4,8 @@ import axios from "axios";
 import { Label, TextInput, Button } from "flowbite-react";
 import {signInStart,signInSuccess,signInFailure} from "../redux/user/userSlice.js";
 import {useDispatch,useSelector} from "react-redux";
+import OAuth from "../components/OAuth.jsx";
+
 
 function Signin() {
   const navigate = useNavigate();
@@ -124,6 +126,7 @@ function Signin() {
                 >
                   Sign In
                 </Button>
+                <OAuth/>
               </form>
               <div className="flex gap-2 text-sm mt-5">
                 <span>Have no account?</span>
