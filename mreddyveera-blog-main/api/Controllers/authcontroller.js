@@ -66,4 +66,36 @@ const signin=async(req,res,next)=>{
     }
 
 }
-module.exports={signup,signin};
+const google=async(req,res,next)=>{
+    const {email,name,googlePhotoUrl}=req.body;
+    console.log(req.body);
+    try{
+        const userExists=await userModel.findOne({email});
+        if(userExists){
+            const token=jwt.sign({id:userExists._id},process.env.JWT_SECRET);
+            const {password,...rest}=userExists._doc;
+            console.log("123");
+            res.status(200).cookie("access_token",token,{
+                httpOnly:true,
+            }).json(rest);
+        }else{
+            const generatePassword=Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8);
+            const hashPassword=bcryptjs.hashSync(generatePassword,10);
+            const newUser=new userModel({
+                username:name.toLowerCase().split(" ").join("")+Math.random().toString(9).slice(-4),
+                password:hashPassword,
+                profilePicture:googlePhotoUrl,
+                email:email,
+
+            });
+            console.log("456");
+            await newUser.save();
+            const token=jwt.sign({id:newUser._id},process.env.JWT_SECRET);
+            const {password,...rest}=newUser._doc;
+            res.status(200).cookie('access_token',token,{httpOnly:true}).json(rest);
+        }
+    } catch(error){
+        console.log(error.message);
+    }
+}
+module.exports={signup,signin,google};
