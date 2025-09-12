@@ -10,14 +10,16 @@ import {
 } from "flowbite-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiSearch } from "react-icons/hi";
-import { FaMoon } from "react-icons/fa";
-import { useSelector } from "react-redux";
-
+import { FaMoon,FaSun } from "react-icons/fa";
+import { useSelector,useDispatch } from "react-redux";
+import { toggleTheme } from "../redux/theme/themeSlice.js";
 function Header() {
   const path = useLocation().pathname;
+  const dispatch=useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   console.log(currentUser);
+  const {theme}=useSelector((state)=>state.theme);
 
   return (
     <Navbar className="border-b-2 border-gray-200 bg-white dark:bg-gray-900 px-4">
@@ -77,8 +79,8 @@ function Header() {
 
       <div className="flex items-center gap-3">
         {/* Dark Mode Button */}
-        <Button color="gray" pill>
-          <FaMoon />
+        <Button color="gray" pill onClick={()=>dispatch(toggleTheme())}>
+          {theme==="light"?<FaSun/>:<FaMoon/>}
         </Button>
 
         {/* User Dropdown */}
