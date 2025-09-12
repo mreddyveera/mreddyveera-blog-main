@@ -17,10 +17,18 @@ function OAuth(){
         provider.setCustomParameters({prompt:'select_account'});
         try{
             const resultsFromGoogle=await signInWithPopup(auth,provider);
+            console.log("Results from Google:", resultsFromGoogle);
+console.log("User data:", resultsFromGoogle.user);
+
+console.log("displayName:", resultsFromGoogle.user.displayName);
+console.log("email:", resultsFromGoogle.user.email);
+console.log("photoURL:", resultsFromGoogle.user.photoURL);
+
             const data={name:resultsFromGoogle.user.displayName,
                 email:resultsFromGoogle.user.email,
-                googlePhotoUrl:resultsFromGoogle.user.googlePhotoURL
+                photoURL:resultsFromGoogle.user.photoURL,
             }
+            
             axios.post('http://localhost:3000/api/auth/google',data)
             .then((response)=>{
                 dispatch(signInSuccess(data));
@@ -30,9 +38,6 @@ function OAuth(){
             .catch((error)=>{
                 console.log(error.message);
             })
-
-
-            console.log(resultsFromGoogle);
            
         }
         catch(error){
