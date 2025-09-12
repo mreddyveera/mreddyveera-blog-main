@@ -2,6 +2,9 @@ import {
   Avatar,
   Button,
   Dropdown,
+  DropdownItem,
+  DropdownHeader,
+  DropdownDivider,
   Navbar,
   NavbarCollapse,
   NavbarLink,
@@ -85,39 +88,44 @@ function Header() {
 
         {/* User Dropdown */}
         {currentUser ? (
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="user"
-                img={currentUser?.photoURL}
-                rounded
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">{currentUser?.displayName}</span>
-              <span className="block text-sm font-medium truncate">
-                {currentUser?.email}
-              </span>
-            </Dropdown.Header>
+          <div className="relative">
+  <Dropdown
+    arrowIcon={false}
+    inline
+    label={
+      <Avatar
+        alt="user"
+        img={currentUser?.photoURL || currentUser?.googlePhotoUrl}
+        rounded
+      />
+    }
+  >
+    <DropdownHeader>
+      <span className="block text-sm">{currentUser?.displayName || currentUser?.name}</span>
+      <span className="block text-sm font-medium truncate">
+        {currentUser?.email}
+      </span>
+    </DropdownHeader>
 
-            <Dropdown.Item as={Link} to="/dashboard?tab=profile">
-              Profile
-            </Dropdown.Item>
+    <DropdownItem>
+  <Link to="/dashboard?tab=profile" className="block w-full">
+    Profile
+  </Link>
+</DropdownItem>
 
-            <Dropdown.Divider />
 
-            <Dropdown.Item
-              onClick={() => {
-                console.log("Logout clicked");
-                // TODO: handle real sign out here
-              }}
-            >
-              Sign out
-            </Dropdown.Item>
-          </Dropdown>
+    <DropdownDivider />
+
+    <DropdownItem
+      onClick={() => {
+        console.log("Logout clicked");
+      }}
+    >
+      Sign out
+    </DropdownItem>
+  </Dropdown>
+</div>
+
         ) : (
           <Link to="/signin">
             <Button className="bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800">
