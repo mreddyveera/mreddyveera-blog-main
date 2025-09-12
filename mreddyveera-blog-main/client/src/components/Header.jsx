@@ -1,19 +1,27 @@
 import {
+  Avatar,
   Button,
+  Dropdown,
   Navbar,
   NavbarCollapse,
   NavbarLink,
   NavbarToggle,
   TextInput,
 } from "flowbite-react";
-import { Link,useLocation} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { HiSearch } from "react-icons/hi";
 import { FaMoon } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function Header() {
-  const path=useLocation().pathname;
+  const path = useLocation().pathname;
+  const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser);
+
   return (
     <Navbar className="border-b-2 border-gray-200 bg-white dark:bg-gray-900 px-4">
+      {/* Logo / Brand */}
       <Link
         to="/"
         className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
@@ -24,40 +32,97 @@ function Header() {
         Blog
       </Link>
 
-      {/*Search bar*/}
+      {/* Search bar */}
       <div className="flex justify-center">
         <form className="hidden lg:block">
-          <TextInput type="text" placeholder="Serach..." icon={HiSearch} />
+          <TextInput type="text" placeholder="Search..." icon={HiSearch} />
         </form>
         <Button className="w-15 h-8 lg:hidden" color="gray" pill>
           <HiSearch />
         </Button>
       </div>
 
-              <NavbarToggle />
+      <NavbarToggle />
+
       <NavbarCollapse>
-        <NavbarLink href="/" active={path==="/"} className="text-gray-700 dark:text-gray-300 hover:text-indigo-600">
+        <NavbarLink
+          href="/"
+          active={path === "/"}
+          className="text-gray-700 dark:text-gray-300 hover:text-indigo-600"
+        >
           Home
         </NavbarLink>
-        <NavbarLink href="/about" active={path==="/about"} className="text-gray-700 dark:text-gray-300 hover:text-indigo-600">About</NavbarLink>
-        <NavbarLink href="/projects" active={path==="/projects"} className="text-gray-700 dark:text-gray-300 hover:text-indigo-600">Projects</NavbarLink>
-        <NavbarLink href="/dashboard" active={path==="/dashboard"} className="text-gray-700 dark:text-gray-300 hover:text-indigo-600">Dashboard</NavbarLink>
+        <NavbarLink
+          href="/about"
+          active={path === "/about"}
+          className="text-gray-700 dark:text-gray-300 hover:text-indigo-600"
+        >
+          About
+        </NavbarLink>
+        <NavbarLink
+          href="/projects"
+          active={path === "/projects"}
+          className="text-gray-700 dark:text-gray-300 hover:text-indigo-600"
+        >
+          Projects
+        </NavbarLink>
+        <NavbarLink
+          href="/dashboard"
+          active={path === "/dashboard"}
+          className="text-gray-700 dark:text-gray-300 hover:text-indigo-600"
+        >
+          Dashboard
+        </NavbarLink>
       </NavbarCollapse>
-      
-    
 
       <div className="flex items-center gap-3">
-        {/* Moon Icon Button */}
+        {/* Dark Mode Button */}
         <Button color="gray" pill>
           <FaMoon />
         </Button>
 
-        {/* Sign In Button */}
-        <Link to="/signin">
-          <Button className="bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800">
-            Sign In
-          </Button>
-        </Link>
+        {/* User Dropdown */}
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="user"
+                img={currentUser?.photoURL}
+                rounded
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">{currentUser?.displayName}</span>
+              <span className="block text-sm font-medium truncate">
+                {currentUser?.email}
+              </span>
+            </Dropdown.Header>
+
+            <Dropdown.Item as={Link} to="/dashboard?tab=profile">
+              Profile
+            </Dropdown.Item>
+
+            <Dropdown.Divider />
+
+            <Dropdown.Item
+              onClick={() => {
+                console.log("Logout clicked");
+                // TODO: handle real sign out here
+              }}
+            >
+              Sign out
+            </Dropdown.Item>
+          </Dropdown>
+        ) : (
+          <Link to="/signin">
+            <Button className="bg-gradient-to-br from-purple-600 to-blue-500 text-white hover:bg-gradient-to-bl focus:ring-blue-300 dark:focus:ring-blue-800">
+              Sign In
+            </Button>
+          </Link>
+        )}
       </div>
     </Navbar>
   );
