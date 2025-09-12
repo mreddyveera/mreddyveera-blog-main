@@ -19,7 +19,7 @@ function OAuth(){
             const resultsFromGoogle=await signInWithPopup(auth,provider);
             const data={name:resultsFromGoogle.user.displayName,
                 email:resultsFromGoogle.user.email,
-                googlePhotoUrl:resultsFromGoogle.user.photoURL
+                googlePhotoUrl:resultsFromGoogle.user.googlePhotoURL
             }
             axios.post('http://localhost:3000/api/auth/google',data)
             .then((response)=>{
