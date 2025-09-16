@@ -1,9 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import {useLocation} from "react-router-dom";
+import DashProfile from '../components/DashProfile.jsx';
+import DashSidebar from '../components/DashSidebar.jsx';
 
-export default function Dashboard() {
+function Dashboard() {
+  const location=useLocation();
+  const [tab,setTab]=useState ("");
+  useEffect(()=>{
+    const urlParams=new URLSearchParams(location.search);
+    console.log(urlParams);
+    const tabFromUrl=urlParams.get('tab');
+    if(tabFromUrl){
+      setTab(tabFromUrl);
+    }
+  },[location.search]);
   return (
-    <div>
-      Reddy
-    </div>
+    <>
+    <div className="min-h-screen flex flkex-col md:flex-row">
+
+   
+      <div className="md:w-56">
+        {/*sidebar*/}
+        <DashSidebar/>
+
+      </div>
+       
+      <div>
+        {tab==="profile" && <DashProfile/>}
+      </div>
+      </div>
+    </>
   )
 }
+
+export default Dashboard;
