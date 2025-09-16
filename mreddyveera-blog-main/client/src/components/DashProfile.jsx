@@ -1,9 +1,22 @@
 import { Button, TextInput } from 'flowbite-react';
 import { useSelector } from 'react-redux';
+import { useState, useRef, useEffect } from 'react';
 
 function DashProfile() {
   const { currentUser } = useSelector(state => state.user);
+  const [image,setImage] =useState(null);
+  const [imageFileUrl,setImageFileUrl]=useState(null);
+  const filePickerRef=useRef();
 
+  const handleImageChange=(e)=>{
+    const file=e.target.files[0];
+    if(file){
+      setImage(file);
+      setImageFileUrl(URL.createObjectURL(file));
+
+    }
+    
+  };
   return (
     <div className="flex items-center justify-center min-h-screen w-full">
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-10 w-full max-w-lg">
@@ -11,9 +24,10 @@ function DashProfile() {
 
         <form className="flex flex-col items-center gap-4">
           {/* Circular Profile Image */}
-          <div className="w-32 h-32 cursor-pointer shadow-md overflow-hidden rounded-full border-8 border-gray-300">
+          <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} hidden/>
+          <div className="w-32 h-32 cursor-pointer shadow-md overflow-hidden rounded-full border-8 border-gray-300" onClick={()=>{filePickerRef.current.click()}}>
             <img
-              src={currentUser.photoURL}
+              src={imageFileUrl || currentUser.photoURL}
               alt="Profile"
               className="w-full h-full object-cover"
             />
