@@ -25,7 +25,7 @@ function Dashboard() {
 
       </div>
        
-      <div>
+      <div className="flex-1 flex items-center justify-center">
         {tab==="profile" && <DashProfile/>}
       </div>
       </div>
