@@ -18,11 +18,11 @@ function DashProfile() {
     
   };
   return (
-    <div className="flex items-center justify-center min-h-screen w-full">
+    <div className="flex items-center justify-center w-full ">
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-10 w-full max-w-lg">
         <h1 className="text-2xl font-semibold mb-6 text-center">Profile</h1>
 
-        <form className="flex flex-col items-center gap-4">
+        <form className="flex flex-col items-center gap-4 -mt-0.5">
           {/* Circular Profile Image */}
           <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} hidden/>
           <div className="w-32 h-32 cursor-pointer shadow-md overflow-hidden rounded-full border-8 border-gray-300" onClick={()=>{filePickerRef.current.click()}}>

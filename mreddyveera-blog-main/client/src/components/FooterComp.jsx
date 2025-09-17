@@ -4,7 +4,7 @@ import { FaFacebook, FaTelegram } from "react-icons/fa";
 
 function FooterComp() {
   return (
-    <Footer className="fixed bottom-0 w-full border-t-8">
+    <Footer className="w-full border-t-8">
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid w-full justify-between sm:flex md:grid-cols-1">
           <div className="mt-5">
