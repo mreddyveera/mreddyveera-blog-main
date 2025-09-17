@@ -1,6 +1,8 @@
-const express=require('express');
+import express from 'express';
 const router=express.Router();
-const controller=require('../Controllers/usercontroller.js');
+import verifyToken from "../utils/verifyUser.js";
+import {updateUser} from '../Controllers/usercontroller.js';
 
-router.get('/sayHello',controller.sayHello);
-module.exports=router;
+router.put("/update/:userId", verifyToken, updateUser)
+
+export default router;
