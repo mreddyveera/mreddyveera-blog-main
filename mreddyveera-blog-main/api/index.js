@@ -1,30 +1,43 @@
-const express=require('express');
-const mongoose=require('mongoose');
-const dotenv=require('dotenv');
-const userRoute=require('./Routes/userroute.js');
-const authRoute=require('./Routes/authroute.js');
-const cors = require("cors");
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-// The dotenv.config() function in a Node.js application reads a specified .env file, parses its contents, and injects the defined key-value pairs into the process.env object.
-//  This allows the application to access these environment variables throughout its code using process.env.VARIABLE_NAME
+import userRoute from "./Routes/userroute.js";
+import authRoute from "./Routes/authroute.js";
+
 dotenv.config();
-//connectimng with database
-mongoose.connect(process.env.mongo_url).then(console.log("Database connection established successfully"));
-const app=express();
+
+// Connect to database
+mongoose
+  .connect(process.env.mongo_url)
+  .then(() => console.log("Database connection established successfully"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
-app.use('/api/user',userRoute);
-app.use('/api/auth',authRoute);
-//starting a bacjend server using listen method
-app.listen(3000,()=>{
-    console.log(`Server started on server 3000`);
+app.use(cookieParser());
+
+// Routes
+app.use("/api/user", userRoute);
+app.use("/api/auth", authRoute);
+
+// Global error handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const errMessage = err.message || "Internal Server Error";
+  return res.status(statusCode).json({
+    success: false,
+    statusCode,
+    errMessage,
+  });
 });
-//Handling all type of errors
-app.use((err,req,res,next)=>{
-    const statusCode=err.statusCode || 500;
-    const errMessage=err.message||'Internal Server Error';
-    return res.status(statusCode).json({success:false,
-        statusCode,
-        errMessage
-    });
+
+// Start server
+app.listen(3000, () => {
+  console.log(`Server started on port 3000`);
 });
